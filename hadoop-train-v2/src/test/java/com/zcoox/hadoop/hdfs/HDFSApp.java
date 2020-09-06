@@ -1,5 +1,6 @@
 package com.zcoox.hadoop.hdfs;
 
+import com.alibaba.fastjson.JSONPObject;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.*;
 import org.apache.hadoop.io.IOUtils;
@@ -8,6 +9,7 @@ import org.apache.log4j.PropertyConfigurator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mortbay.util.ajax.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -197,6 +199,21 @@ public class HDFSApp {
                     replication + "\t" +
                     lenth + "\t" +
                     path);
+        }
+    }
+
+    /**
+     * 查看文件块信息
+     */
+    @Test
+    public void getFileBlkLocations() throws IOException {
+        FileStatus file = fileSystem.getFileStatus(new Path("/hdfsapi/newtest/Java核心技术 卷2 高级特性 原书第10版.pdf"));
+        BlockLocation[] blockLocations = fileSystem.getFileBlockLocations(file, 0, file.getLen());
+        for (BlockLocation blockLocation : blockLocations) {
+            for (String name : blockLocation.getNames()) {
+                String[] strings = blockLocation.getHosts();
+                System.out.println(name + ":" + blockLocation.getOffset() + ":" + blockLocation.getLength() + ":" + JSON.toString(strings));
+            }
         }
     }
 
