@@ -3,6 +3,7 @@ package com.zcoox.hadoop.hdfs;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.*;
 import org.apache.hadoop.io.IOUtils;
+import org.apache.hadoop.util.Progressable;
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.After;
 import org.junit.Before;
@@ -10,8 +11,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Properties;
@@ -119,10 +119,43 @@ public class HDFSApp {
      * @throws IOException
      */
     @Test
-    public void copyFromLocal() throws IOException {
+    public void copyFromLocalTest() throws IOException {
         Path localPath = new Path("/Users/gf/Desktop/information/SpringCloud");
         Path remotePath = new Path("/hdfsapi/");
         fileSystem.copyFromLocalFile(localPath, remotePath);
+    }
+
+    /**
+     * 上传大文件（带进度）
+     */
+    @Test
+    public void copyFromLocalLargeTest() throws IOException {
+        File file = new File("/Users/gf/Desktop/book/Java核心技术 卷2 高级特性 原书第10版.pdf");
+        InputStream in = new BufferedInputStream(new FileInputStream(file));
+        final float fileSize = file.length() / 65536;
+        FSDataOutputStream out = fileSystem.create(new Path("/hdfsapi/newtest/Java核心技术 卷2 高级特性 原书第10版.pdf"), new Progressable() {
+            long fileCount = 0;
+
+            @Override
+            public void progress() {
+                fileCount++;
+                System.out.println("总进度：" + (fileCount / fileSize) * 100 + " %");
+            }
+        });
+        IOUtils.copyBytes(in, out, 4096);
+        out.flush();
+        out.close();
+    }
+
+    /**
+     * 拷贝HDFS文件到本地：下载
+     */
+    @Test
+    public void copyToLocalFileTest() throws IOException {
+        Path src = new Path("/hdfsapi/newtest/d.txt");
+        // TODO 此处是否可以做成多线程
+        Path sdt = new Path("/Users/gf/Desktop");
+        fileSystem.copyToLocalFile(src, sdt);
     }
 
     @After
