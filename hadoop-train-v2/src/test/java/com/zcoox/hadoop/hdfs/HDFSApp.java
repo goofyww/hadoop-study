@@ -162,9 +162,31 @@ public class HDFSApp {
      * 列出目标文件夹下所有文件
      */
     @Test
-    public void listTest() throws IOException {
+    public void listStatusTest() throws IOException {
         FileStatus[] statuses = fileSystem.listStatus(new Path("/hdfsapi/newtest/"));
         for (FileStatus file : statuses) {
+            String isDir = file.isDirectory() ? "文件夹" : "文件";
+            String premission = file.getPermission().toString();
+            short replication = file.getReplication();
+            long lenth = file.getLen();
+            String path = file.getPath().toString();
+            System.out.println(isDir + "\t" +
+                    premission + "\t" +
+                    replication + "\t" +
+                    lenth + "\t" +
+                    path);
+        }
+    }
+
+    /**
+     * 递归列出目标文件夹下所有文件
+     * 仅能列出文件
+     */
+    @Test
+    public void listFilesTest() throws IOException {
+        RemoteIterator<LocatedFileStatus> iterator = fileSystem.listFiles(new Path("/hdfsapi/"), true);
+        while (iterator.hasNext()) {
+            LocatedFileStatus file = iterator.next();
             String isDir = file.isDirectory() ? "文件夹" : "文件";
             String premission = file.getPermission().toString();
             short replication = file.getReplication();
