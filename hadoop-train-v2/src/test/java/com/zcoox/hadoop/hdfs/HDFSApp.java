@@ -113,6 +113,18 @@ public class HDFSApp {
         System.out.println(res ? "success" : "failure");
     }
 
+    /**
+     * copyFromLocalFile 上传
+     *
+     * @throws IOException
+     */
+    @Test
+    public void copyFromLocal() throws IOException {
+        Path localPath = new Path("/Users/gf/Desktop/information/SpringCloud");
+        Path remotePath = new Path("/hdfsapi/");
+        fileSystem.copyFromLocalFile(localPath, remotePath);
+    }
+
     @After
     public void destory() {
         configuration = null;
