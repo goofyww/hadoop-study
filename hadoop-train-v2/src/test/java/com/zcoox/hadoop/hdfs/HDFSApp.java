@@ -59,7 +59,7 @@ public class HDFSApp {
      */
     @Test
     public void mkdirsTest() throws IOException {
-        boolean res = fileSystem.mkdirs(new Path("/hdfsapi/newtest5"));
+        boolean res = fileSystem.mkdirs(new Path("/hdfsapi/newtest/testdir"));
         System.out.println(res);
     }
 
@@ -156,6 +156,26 @@ public class HDFSApp {
         // TODO 此处是否可以做成多线程
         Path sdt = new Path("/Users/gf/Desktop");
         fileSystem.copyToLocalFile(src, sdt);
+    }
+
+    /**
+     * 列出目标文件夹下所有文件
+     */
+    @Test
+    public void listTest() throws IOException {
+        FileStatus[] statuses = fileSystem.listStatus(new Path("/hdfsapi/newtest/"));
+        for (FileStatus file : statuses) {
+            String isDir = file.isDirectory() ? "文件夹" : "文件";
+            String premission = file.getPermission().toString();
+            short replication = file.getReplication();
+            long lenth = file.getLen();
+            String path = file.getPath().toString();
+            System.out.println(isDir + "\t" +
+                    premission + "\t" +
+                    replication + "\t" +
+                    lenth + "\t" +
+                    path);
+        }
     }
 
     @After
