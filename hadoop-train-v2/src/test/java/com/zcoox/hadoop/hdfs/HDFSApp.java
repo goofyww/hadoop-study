@@ -100,6 +100,19 @@ public class HDFSApp {
         System.out.println(configuration.get("dfs.replication"));
     }
 
+    /**
+     * 重命名
+     *
+     * @throws IOException
+     */
+    @Test
+    public void renameTest() throws IOException {
+        Path oldPath = new Path("/hdfsapi/newtest/c.txt");
+        Path newPath = new Path("/hdfsapi/newtest/d.txt");
+        boolean res = fileSystem.rename(oldPath, newPath);
+        System.out.println(res ? "success" : "failure");
+    }
+
     @After
     public void destory() {
         configuration = null;
