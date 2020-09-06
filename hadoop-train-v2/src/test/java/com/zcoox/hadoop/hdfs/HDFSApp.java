@@ -217,6 +217,15 @@ public class HDFSApp {
         }
     }
 
+    /**
+     * 删除文件
+     */
+    @Test
+    public void delTest() throws IOException {
+        boolean res = fileSystem.delete(new Path("/hdfsapi/newtest/Java核心技术 卷2 高级特性 原书第10版.pdf"), true);
+        System.out.println(res);
+    }
+
     @After
     public void destory() {
         configuration = null;
