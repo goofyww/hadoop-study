@@ -48,6 +48,7 @@ public class HDFSApp {
     public void init() throws URISyntaxException, IOException, InterruptedException {
         logger.info(">>>>>>>>>>>> init <<<<<<<<<<<<");
         configuration = new Configuration();
+        configuration.set("dfs.replication", "1");
         fileSystem = FileSystem.get(new URI(HDFS_URI), configuration, HDFS_USER);
     }
 
@@ -80,11 +81,23 @@ public class HDFSApp {
      */
     @Test
     public void createTest() throws IOException {
-        FSDataOutputStream out = fileSystem.create(new Path("/hdfsapi/newtest/a.txt"));
-        String outstr = "hello china \nhello USA \nhello Jepan \n";
+//        FSDataOutputStream out = fileSystem.create(new Path("/hdfsapi/newtest/a.txt"));
+        FSDataOutputStream out = fileSystem.create(new Path("/hdfsapi/newtest/c.txt"));
+        String outstr = "hello china-2 \nhello USA \nhello Jepan \n";
         out.write(outstr.getBytes());
         out.flush();
         out.close();
+    }
+
+    /**
+     * 副本系数深度解析
+     * ⚠️ 在服务器中以shell命令行的方式执行api操作是以hadoop配置的为准
+     * ⚠️ 在以java作为客户端的方式执行api操作则以jar包中提供的默认配置为准
+     * 详见 hadoop-hdfs.jar 下 hdfs.default.xml
+     */
+    @Test
+    public void testReplication() {
+        System.out.println(configuration.get("dfs.replication"));
     }
 
     @After
