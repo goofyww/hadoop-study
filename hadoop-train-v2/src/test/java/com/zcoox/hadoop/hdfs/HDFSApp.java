@@ -17,5 +17,5 @@ public class HDFSApp {
         boolean result = fileSystem.mkdirs(new Path("/hdfsapi/test"));
         System.out.println(result);
     }
-    
+
 }
