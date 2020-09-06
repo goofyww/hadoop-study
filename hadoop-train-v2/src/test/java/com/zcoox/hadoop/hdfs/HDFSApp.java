@@ -73,6 +73,20 @@ public class HDFSApp {
         IOUtils.copyBytes(in, System.out, 1024);
     }
 
+    /**
+     * 创建文件并写入内容
+     *
+     * @throws IOException
+     */
+    @Test
+    public void createTest() throws IOException {
+        FSDataOutputStream out = fileSystem.create(new Path("/hdfsapi/newtest/a.txt"));
+        String outstr = "hello china \nhello USA \nhello Jepan \n";
+        out.write(outstr.getBytes());
+        out.flush();
+        out.close();
+    }
+
     @After
     public void destory() {
         configuration = null;
