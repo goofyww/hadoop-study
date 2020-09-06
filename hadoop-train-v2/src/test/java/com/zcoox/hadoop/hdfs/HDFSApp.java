@@ -1,8 +1,8 @@
 package com.zcoox.hadoop.hdfs;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.*;
+import org.apache.hadoop.io.IOUtils;
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.After;
 import org.junit.Before;
@@ -60,6 +60,17 @@ public class HDFSApp {
     public void mkdirsTest() throws IOException {
         boolean res = fileSystem.mkdirs(new Path("/hdfsapi/newtest5"));
         System.out.println(res);
+    }
+
+    /**
+     * 查看HDFS内容
+     *
+     * @throws IOException
+     */
+    @Test
+    public void openTest() throws IOException {
+        FSDataInputStream in = fileSystem.open(new Path("/kafka/kafka.txt"));
+        IOUtils.copyBytes(in, System.out, 1024);
     }
 
     @After
